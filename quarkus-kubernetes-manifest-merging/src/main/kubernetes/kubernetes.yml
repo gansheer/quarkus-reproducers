@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: quarkus-kubernetes-manifest-merging
+  name: quarkus-kubernetes-manifest-merging
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: quarkus-kubernetes-manifest-merging
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: quarkus-kubernetes-manifest-merging
+    spec:
+      containers:
+        - image: quarkus-kubernetes-manifest-merging:1.0-SNAPSHOT
+          name: quarkus-kubernetes-manifest-merging
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: quarkus-kubernetes-manifest-merging
+  name: quarkus-kubernetes-manifest-merging
+spec:
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: quarkus-kubernetes-manifest-merging
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: quarkus-kubernetes-manifest-merging
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: quarkus-kubernetes-manifest-merging
+                port:
+                  name: http
+            path: /
+            pathType: Prefix

@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: quarkus-openshift-manifest-merging
+  name: quarkus-openshift-manifest-merging
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: quarkus-openshift-manifest-merging
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: quarkus-openshift-manifest-merging
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/default/quarkus-openshift-manifest-merging:1.0-SNAPSHOT
+        name: quarkus-openshift-manifest-merging
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: quarkus-openshift-manifest-merging
+  name: test
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: quarkus-openshift-manifest-merging
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: quarkus-openshift-manifest-merging
+spec:
+  port:
+    targetPort: http
+  to:
+    kind: Service
+    name: quarkus-openshift-manifest-merging
