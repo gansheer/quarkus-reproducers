@@ -29,7 +29,7 @@ kind: Service
 metadata:
   labels:
     app.kubernetes.io/name: quarkus-openshift-manifest-merging
-  name: test
+  name: quarkus-openshift-manifest-merging
 spec:
   ports:
   - name: http
