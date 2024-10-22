@@ -10,6 +10,9 @@ spec:
       app.kubernetes.io/name: quarkus-openshift-manifest-merging
   template:
     metadata:
+      annotations:
+        trait.camel.apache.org/logging.level: DEBUG
+        trait.camel.apache.org/logging.color: "false"
       labels:
         app.kubernetes.io/name: quarkus-openshift-manifest-merging
     spec:
